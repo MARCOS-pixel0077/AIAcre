@@ -1,41 +1,42 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AcreAI</title>
-    <link rel="stylesheet" href="html.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot IA</title>
 </head>
 <body>
-    <div class="container">
-        <h1>AcreAI</h1>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Bandeira_do_Acre.svg" alt="Bandeira do Acre" class="bandeira">
-        <form id="chat-form">
-            <label for="pergunta">Digite sua pergunta:</label>
-            <input type="text" id="pergunta" name="pergunta" placeholder="Escreva aqui..." required>
-            <button type="submit">Enviar</button>
-        </form>
-        <div class="resposta-container">
-            <h2>Respostas:</h2>
-            <div id="resposta" class="resposta-box"></div>
-        </div>
-    </div>
+  <h1>Chatbot IA</h1>
+  <form id="chat-form">
+    <label for="pergunta">Digite sua pergunta:</label>
+    <input type="text" id="pergunta" name="pergunta" required>
+    <button type="submit">Enviar</button>
+  </form>
+  <div id="resposta"></div>
 
-    <script>
-        document.getElementById('chat-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const pergunta = document.getElementById('pergunta').value;
+  <script>
+    const form = document.getElementById('chat-form');
+    const respostaDiv = document.getElementById('resposta');
 
-            const response = await fetch('https://seu-backend.onrender.com/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pergunta })
-            });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pergunta = document.getElementById('pergunta').value;
 
-            const data = await response.json();
-            const respostaBox = document.getElementById('resposta');
-            respostaBox.innerHTML = `<p>${data.resposta}</p>`;
+      try {
+        const response = await fetch('https://aiacre.onrender.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pergunta }),
         });
-    </script>
+
+        const data = await response.json();
+        respostaDiv.textContent = `Resposta: ${data.resposta}`;
+      } catch (error) {
+        respostaDiv.textContent = 'Erro ao se comunicar com o backend.';
+      }
+    });
+  </script>
 </body>
 </html>
